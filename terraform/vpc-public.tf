@@ -1,3 +1,13 @@
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.public.id
+
+  tags = {
+    Name       = "public-vpc-igw"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
 resource "aws_vpc" "public" {
   cidr_block           = "192.168.0.0/20" # 192.168.0.0 -> 192.168.15.255 [4096 IPs]
   enable_dns_hostnames = true
