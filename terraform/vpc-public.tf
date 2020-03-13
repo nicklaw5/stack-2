@@ -10,7 +10,7 @@ resource "aws_vpc" "public" {
 }
 
 resource "aws_subnet" "public_a" {
-  vpc_id            = aws_vpc.private.id
+  vpc_id            = aws_vpc.public.id
   availability_zone = "${var.aws_region}a"
   cidr_block        = "192.168.0.0/24" # 192.168.0.0 -> 192.168.0.255 [256 IPs]
 
@@ -22,7 +22,7 @@ resource "aws_subnet" "public_a" {
 }
 
 resource "aws_subnet" "public_b" {
-  vpc_id            = aws_vpc.private.id
+  vpc_id            = aws_vpc.public.id
   availability_zone = "${var.aws_region}b"
   cidr_block        = "192.168.1.0/24" # 192.168.1.0 -> 192.168.1.255 [256 IPs]
 
@@ -34,7 +34,7 @@ resource "aws_subnet" "public_b" {
 }
 
 resource "aws_subnet" "public_c" {
-  vpc_id            = aws_vpc.private.id
+  vpc_id            = aws_vpc.public.id
   availability_zone = "${var.aws_region}c"
   cidr_block        = "192.168.2.0/24" # 192.168.2.0 -> 192.168.2.255 [256 IPs]
 
