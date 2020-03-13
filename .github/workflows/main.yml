@@ -32,5 +32,5 @@ jobs:
       - name: Terraform Plan
         run: .github/scripts/terraform_plan.sh
 
-      # - name: Terraform Apply
-      #   run: .github/scripts/terraform_apply.sh
+      - name: Terraform Apply
+        run: .github/scripts/terraform_apply.sh
