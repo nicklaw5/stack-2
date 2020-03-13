@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-docker run --rm --tty \
+docker run --rm \
     --user $(id -u) \
     --volume ${PWD}/${TERRAFORM_DIR}:/app \
     --workdir /app \

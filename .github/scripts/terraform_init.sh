@@ -6,7 +6,7 @@ TERRAFORM_STATE_KEY=${REPOSITORY}/terraform.tfstate
 TERRAFORM_STATE_BUCKET=$(aws ssm get-parameter --name /stack-1/terraform_state_bucket | jq -r .Parameter.Value)
 TERRAFORM_STATE_DYNAMODB_TABLE=$(aws ssm get-parameter --name /stack-1/terraform_lock_table | jq -r .Parameter.Value)
 
-docker run --rm --tty \
+docker run --rm \
     --user $(id -u) \
     --env AWS_ACCESS_KEY_ID \
     --env AWS_SECRET_ACCESS_KEY \
