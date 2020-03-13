@@ -1,5 +1,6 @@
 resource "aws_vpc" "public" {
-  cidr_block = "192.168.0.0/20" # 192.168.0.0 -> 192.168.15.255 [4096 IPs]
+  cidr_block           = "192.168.0.0/20" # 192.168.0.0 -> 192.168.15.255 [4096 IPs]
+  enable_dns_hostnames = true
 
   tags = {
     Name       = "public-vpc"
