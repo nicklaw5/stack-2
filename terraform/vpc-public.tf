@@ -1,12 +1,6 @@
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.public.id
-
-  tags = {
-    Name       = "public-vpc-igw"
-    Repository = var.repository
-    ManagedBy  = var.managed_by
-  }
-}
+# ==========================================
+# == PUBLIC VPC
+# ==========================================
 
 resource "aws_vpc" "public" {
   cidr_block           = "192.168.0.0/20" # 192.168.0.0 -> 192.168.15.255 [4096 IPs]
@@ -18,6 +12,10 @@ resource "aws_vpc" "public" {
     ManagedBy  = var.managed_by
   }
 }
+
+# ==========================================
+# == PUBLIC SUBNETS
+# ==========================================
 
 resource "aws_subnet" "public_a" {
   vpc_id            = aws_vpc.public.id
@@ -53,4 +51,47 @@ resource "aws_subnet" "public_c" {
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
+}
+
+# ==========================================
+# == PUBLIC INTERNET GATEWAY
+# ==========================================
+
+resource "aws_internet_gateway" "public_vpc_igw" {
+  vpc_id = aws_vpc.public.id
+
+  tags = {
+    Name       = "public-vpc-igw"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
+# ==========================================
+# == PUBLIC ROUTE TABLE ROUTES
+# ==========================================
+
+resource "aws_route" "public_igw_route" {
+  route_table_id         = aws_vpc.public.default_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.public_vpc_igw.id
+}
+
+# ==========================================
+# == PUBLIC ROUTE TABLE ASSOCIATIONS
+# ==========================================
+
+resource "aws_route_table_association" "public_a_rta" {
+  subnet_id      = aws_subnet.public_a.id
+  route_table_id = aws_vpc.public.default_route_table_id
+}
+
+resource "aws_route_table_association" "public_b_rta" {
+  subnet_id      = aws_subnet.public_b.id
+  route_table_id = aws_vpc.public.default_route_table_id
+}
+
+resource "aws_route_table_association" "public_c_rta" {
+  subnet_id      = aws_subnet.public_c.id
+  route_table_id = aws_vpc.public.default_route_table_id
 }

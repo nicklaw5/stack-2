@@ -1,3 +1,7 @@
+# ==========================================
+# == PRIVATE VPC
+# ==========================================
+
 resource "aws_vpc" "private" {
   cidr_block = "192.168.16.0/20" # 192.168.16.0 -> 192.168.31.255 [4096 IPs]
 
@@ -7,6 +11,10 @@ resource "aws_vpc" "private" {
     ManagedBy  = var.managed_by
   }
 }
+
+# ==========================================
+# == PRIVATE SUBNETS
+# ==========================================
 
 resource "aws_subnet" "private_a" {
   vpc_id            = aws_vpc.private.id
