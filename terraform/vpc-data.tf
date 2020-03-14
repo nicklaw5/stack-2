@@ -51,3 +51,17 @@ resource "aws_subnet" "data_c" {
     ManagedBy  = var.managed_by
   }
 }
+
+# ==========================================
+# == DATA ROUTE TABLES
+# ==========================================
+
+resource "aws_default_route_table" "data_rt_default" {
+  default_route_table_id = aws_vpc.data.default_route_table_id
+
+  tags = {
+    Name       = "data-rt-default"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}

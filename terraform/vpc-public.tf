@@ -68,30 +68,39 @@ resource "aws_internet_gateway" "public_vpc_igw" {
 }
 
 # ==========================================
-# == PUBLIC ROUTE TABLE ROUTES
+# == PUBLIC ROUTE TABLES
 # ==========================================
 
-resource "aws_route" "public_igw_route" {
-  route_table_id         = aws_vpc.public.default_route_table_id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.public_vpc_igw.id
+resource "aws_default_route_table" "public_rt_default" {
+  default_route_table_id = aws_vpc.public.default_route_table_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.public_vpc_igw.id
+  }
+
+  tags = {
+    Name       = "public-rt-default"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
 }
 
 # ==========================================
 # == PUBLIC ROUTE TABLE ASSOCIATIONS
 # ==========================================
 
-resource "aws_route_table_association" "public_a_rta" {
+resource "aws_route_table_association" "public_rta_assoc_a" {
   subnet_id      = aws_subnet.public_a.id
-  route_table_id = aws_vpc.public.default_route_table_id
+  route_table_id = aws_default_route_table.public_rt_default.id
 }
 
-resource "aws_route_table_association" "public_b_rta" {
+resource "aws_route_table_association" "public_rta_assoc_b" {
   subnet_id      = aws_subnet.public_b.id
-  route_table_id = aws_vpc.public.default_route_table_id
+  route_table_id = aws_default_route_table.public_rt_default.id
 }
 
-resource "aws_route_table_association" "public_c_rta" {
+resource "aws_route_table_association" "public_rta_assoc_c" {
   subnet_id      = aws_subnet.public_c.id
-  route_table_id = aws_vpc.public.default_route_table_id
+  route_table_id = aws_default_route_table.public_rt_default.id
 }
