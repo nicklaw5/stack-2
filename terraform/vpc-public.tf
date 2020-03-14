@@ -79,6 +79,11 @@ resource "aws_default_route_table" "public_rt_default" {
     gateway_id = aws_internet_gateway.public_vpc_igw.id
   }
 
+  route {
+    cidr_block                = aws_vpc.private.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.public_to_private.id
+  }
+
   tags = {
     Name       = "public-rt-default"
     Repository = var.repository

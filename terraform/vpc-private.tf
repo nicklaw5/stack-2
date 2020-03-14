@@ -144,6 +144,11 @@ resource "aws_nat_gateway" "private_ngw_c" {
 resource "aws_default_route_table" "private_rt_default" {
   default_route_table_id = aws_vpc.private.default_route_table_id
 
+  route {
+    cidr_block                = aws_vpc.data.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.private_to_data.id
+  }
+
   tags = {
     Name       = "private-rt-default"
     Repository = var.repository
@@ -157,6 +162,11 @@ resource "aws_route_table" "private_rt_a" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_nat_gateway.private_ngw_a.id
+  }
+
+  route {
+    cidr_block                = aws_vpc.data.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.private_to_data.id
   }
 
   tags = {
@@ -174,6 +184,11 @@ resource "aws_route_table" "private_rt_b" {
     gateway_id = aws_nat_gateway.private_ngw_b.id
   }
 
+  route {
+    cidr_block                = aws_vpc.data.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.private_to_data.id
+  }
+
   tags = {
     Name       = "private-rt-b"
     Repository = var.repository
@@ -187,6 +202,11 @@ resource "aws_route_table" "private_rt_c" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_nat_gateway.private_ngw_c.id
+  }
+
+  route {
+    cidr_block                = aws_vpc.data.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.private_to_data.id
   }
 
   tags = {
