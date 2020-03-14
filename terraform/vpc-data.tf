@@ -7,6 +7,7 @@ resource "aws_vpc" "data" {
 
   tags = {
     Name       = "data-vpc"
+    Visibility = "restricted"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -23,6 +24,7 @@ resource "aws_subnet" "data_a" {
 
   tags = {
     Name       = "data-subnet-a"
+    Visibility = "restricted"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -35,6 +37,7 @@ resource "aws_subnet" "data_b" {
 
   tags = {
     Name       = "data-subnet-b"
+    Visibility = "restricted"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -47,6 +50,7 @@ resource "aws_subnet" "data_c" {
 
   tags = {
     Name       = "data-subnet-c"
+    Visibility = "restricted"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }

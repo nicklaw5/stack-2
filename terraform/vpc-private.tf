@@ -7,6 +7,7 @@ resource "aws_vpc" "private" {
 
   tags = {
     Name       = "private-vpc"
+    Visibility = "private"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -23,6 +24,7 @@ resource "aws_subnet" "private_a" {
 
   tags = {
     Name       = "private-subnet-a"
+    Visibility = "private"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -35,6 +37,7 @@ resource "aws_subnet" "private_b" {
 
   tags = {
     Name       = "private-subnet-b"
+    Visibility = "private"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -47,6 +50,7 @@ resource "aws_subnet" "private_c" {
 
   tags = {
     Name       = "private-subnet-c"
+    Visibility = "private"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
