@@ -136,3 +136,81 @@ resource "aws_nat_gateway" "private_ngw_c" {
     ManagedBy  = var.managed_by
   }
 }
+
+# ==========================================
+# == PRIVATE ROUTE TABLES
+# ==========================================
+
+resource "aws_default_route_table" "private_rt_default" {
+  default_route_table_id = aws_vpc.private.default_route_table_id
+
+  tags = {
+    Name       = "private-rt-default"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
+resource "aws_route_table" "private_rt_a" {
+  vpc_id = aws_vpc.private.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.private_ngw_a.id
+  }
+
+  tags = {
+    Name       = "private-rt-a"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
+resource "aws_route_table" "private_rt_b" {
+  vpc_id = aws_vpc.private.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.private_ngw_b.id
+  }
+
+  tags = {
+    Name       = "private-rt-b"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
+resource "aws_route_table" "private_rt_c" {
+  vpc_id = aws_vpc.private.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_nat_gateway.private_ngw_c.id
+  }
+
+  tags = {
+    Name       = "private-rt-c"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
+# ==========================================
+# == PRIVATE ROUTE TABLE ASSOCIATIONS
+# ==========================================
+
+resource "aws_route_table_association" "private_rta_assoc_a" {
+  subnet_id      = aws_subnet.private_a.id
+  route_table_id = aws_route_table.private_rt_a.id
+}
+
+resource "aws_route_table_association" "private_rta_assoc_b" {
+  subnet_id      = aws_subnet.private_b.id
+  route_table_id = aws_route_table.private_rt_b.id
+}
+
+resource "aws_route_table_association" "private_rta_assoc_c" {
+  subnet_id      = aws_subnet.private_c.id
+  route_table_id = aws_route_table.private_rt_c.id
+}
