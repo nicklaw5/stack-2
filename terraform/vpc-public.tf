@@ -7,8 +7,7 @@ resource "aws_vpc" "public" {
   enable_dns_hostnames = true
 
   tags = {
-    Name       = "public-vpc"
-    Visibility = "public"
+    Name       = "vpc-public"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -24,7 +23,7 @@ resource "aws_subnet" "public_a" {
   cidr_block        = "192.168.0.0/24" # 192.168.0.0 -> 192.168.0.255 [256 IPs]
 
   tags = {
-    Name       = "public-subnet-a"
+    Name       = "pub-subnet-a"
     Visibility = "public"
     Repository = var.repository
     ManagedBy  = var.managed_by
@@ -37,7 +36,7 @@ resource "aws_subnet" "public_b" {
   cidr_block        = "192.168.1.0/24" # 192.168.1.0 -> 192.168.1.255 [256 IPs]
 
   tags = {
-    Name       = "public-subnet-b"
+    Name       = "pub-subnet-b"
     Visibility = "public"
     Repository = var.repository
     ManagedBy  = var.managed_by
@@ -50,7 +49,7 @@ resource "aws_subnet" "public_c" {
   cidr_block        = "192.168.2.0/24" # 192.168.2.0 -> 192.168.2.255 [256 IPs]
 
   tags = {
-    Name       = "public-subnet-c"
+    Name       = "pub-subnet-c"
     Visibility = "public"
     Repository = var.repository
     ManagedBy  = var.managed_by
@@ -58,24 +57,24 @@ resource "aws_subnet" "public_c" {
 }
 
 # ==========================================
-# == FLOW LOGS
+# == PUBLIC FLOW LOGS
 # ==========================================
 
-resource "aws_cloudwatch_log_group" "public_vpc_flow_logs_lg" {
-  name              = "public-vpc-flow-logs-lg"
+resource "aws_cloudwatch_log_group" "vpc_pub_flow_logs_lg" {
+  name              = "vpc-pub-flow-logs-lg"
   retention_in_days = 1
 
   tags = {
-    Name       = "public-vpc-flow-logs"
+    Name       = "vpc-pub-flow-logs"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
 }
 
-resource "aws_flow_log" "public_vpc_fl" {
+resource "aws_flow_log" "vpc_public_fl" {
   vpc_id          = aws_vpc.public.id
   iam_role_arn    = aws_iam_role.flow_logs_role.arn
-  log_destination = aws_cloudwatch_log_group.public_vpc_flow_logs_lg.arn
+  log_destination = aws_cloudwatch_log_group.vpc_pub_flow_logs_lg.arn
   traffic_type    = "ALL"
 }
 
@@ -83,11 +82,11 @@ resource "aws_flow_log" "public_vpc_fl" {
 # == PUBLIC INTERNET GATEWAY
 # ==========================================
 
-resource "aws_internet_gateway" "public_vpc_igw" {
+resource "aws_internet_gateway" "vpc_public_igw" {
   vpc_id = aws_vpc.public.id
 
   tags = {
-    Name       = "public-vpc-igw"
+    Name       = "vpc-pub-igw"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -97,21 +96,16 @@ resource "aws_internet_gateway" "public_vpc_igw" {
 # == PUBLIC ROUTE TABLES
 # ==========================================
 
-resource "aws_default_route_table" "public_rt_default" {
+resource "aws_default_route_table" "vpc_pub_default_rt" {
   default_route_table_id = aws_vpc.public.default_route_table_id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.public_vpc_igw.id
-  }
-
-  route {
-    cidr_block                = aws_vpc.private.cidr_block
-    vpc_peering_connection_id = aws_vpc_peering_connection.public_to_private.id
+    gateway_id = aws_internet_gateway.vpc_public_igw.id
   }
 
   tags = {
-    Name       = "public-rt-default"
+    Name       = "vpc-pub-default-rt"
     Repository = var.repository
     ManagedBy  = var.managed_by
   }
@@ -121,17 +115,17 @@ resource "aws_default_route_table" "public_rt_default" {
 # == PUBLIC ROUTE TABLE ASSOCIATIONS
 # ==========================================
 
-resource "aws_route_table_association" "public_rta_assoc_a" {
+resource "aws_route_table_association" "pub_rta_assoc_a" {
   subnet_id      = aws_subnet.public_a.id
-  route_table_id = aws_default_route_table.public_rt_default.id
+  route_table_id = aws_default_route_table.vpc_pub_default_rt.id
 }
 
-resource "aws_route_table_association" "public_rta_assoc_b" {
+resource "aws_route_table_association" "pub_rta_assoc_b" {
   subnet_id      = aws_subnet.public_b.id
-  route_table_id = aws_default_route_table.public_rt_default.id
+  route_table_id = aws_default_route_table.vpc_pub_default_rt.id
 }
 
-resource "aws_route_table_association" "public_rta_assoc_c" {
+resource "aws_route_table_association" "pub_rta_assoc_c" {
   subnet_id      = aws_subnet.public_c.id
-  route_table_id = aws_default_route_table.public_rt_default.id
+  route_table_id = aws_default_route_table.vpc_pub_default_rt.id
 }
