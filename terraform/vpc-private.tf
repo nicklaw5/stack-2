@@ -164,6 +164,42 @@ resource "aws_nat_gateway" "private_ngw_c" {
 }
 
 # ==========================================
+# == PRIVATE NAT GATWAY FLOW LOGS
+# ==========================================
+
+resource "aws_cloudwatch_log_group" "private_nat_gw_flow_logs_lg" {
+  name              = "private-nat-gw-flow-logs-lg"
+  retention_in_days = 1
+
+  tags = {
+    Name       = "private-nat-gw-flow-logs"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
+resource "aws_flow_log" "private_nat_gw_a_fl" {
+  eni_id          = aws_nat_gateway.private_ngw_a.network_interface_id
+  iam_role_arn    = aws_iam_role.flow_logs_role.arn
+  log_destination = aws_cloudwatch_log_group.private_vpc_flow_logs_lg.arn
+  traffic_type    = "ALL"
+}
+
+resource "aws_flow_log" "private_nat_gw_b_fl" {
+  eni_id          = aws_nat_gateway.private_ngw_b.network_interface_id
+  iam_role_arn    = aws_iam_role.flow_logs_role.arn
+  log_destination = aws_cloudwatch_log_group.private_vpc_flow_logs_lg.arn
+  traffic_type    = "ALL"
+}
+
+resource "aws_flow_log" "private_nat_gw_c_fl" {
+  eni_id          = aws_nat_gateway.private_ngw_c.network_interface_id
+  iam_role_arn    = aws_iam_role.flow_logs_role.arn
+  log_destination = aws_cloudwatch_log_group.private_vpc_flow_logs_lg.arn
+  traffic_type    = "ALL"
+}
+
+# ==========================================
 # == PRIVATE ROUTE TABLES
 # ==========================================
 
