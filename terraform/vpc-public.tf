@@ -58,6 +58,28 @@ resource "aws_subnet" "public_c" {
 }
 
 # ==========================================
+# == FLOW LOGS
+# ==========================================
+
+resource "aws_cloudwatch_log_group" "public_vpc_flow_logs_lg" {
+  name              = "public-vpc-flow-logs-lg"
+  retention_in_days = 1
+
+  tags = {
+    Name       = "public-vpc-flow-logs"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
+resource "aws_flow_log" "public_vpc_fl" {
+  vpc_id          = aws_vpc.public.id
+  iam_role_arn    = aws_iam_role.flow_logs_role.arn
+  log_destination = aws_cloudwatch_log_group.public_vpc_flow_logs_lg.arn
+  traffic_type    = "ALL"
+}
+
+# ==========================================
 # == PUBLIC INTERNET GATEWAY
 # ==========================================
 

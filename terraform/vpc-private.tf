@@ -57,6 +57,28 @@ resource "aws_subnet" "private_c" {
 }
 
 # ==========================================
+# == FLOW LOGS
+# ==========================================
+
+resource "aws_cloudwatch_log_group" "private_vpc_flow_logs_lg" {
+  name              = "private-vpc-flow-logs-lg"
+  retention_in_days = 1
+
+  tags = {
+    Name       = "private-vpc-flow-logs"
+    Repository = var.repository
+    ManagedBy  = var.managed_by
+  }
+}
+
+resource "aws_flow_log" "private_vpc_fl" {
+  vpc_id          = aws_vpc.private.id
+  iam_role_arn    = aws_iam_role.flow_logs_role.arn
+  log_destination = aws_cloudwatch_log_group.private_vpc_flow_logs_lg.arn
+  traffic_type    = "ALL"
+}
+
+# ==========================================
 # == PRIVATE INTERNET GATEWAY
 # ==========================================
 
