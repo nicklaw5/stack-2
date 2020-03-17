@@ -2,8 +2,4 @@
 
 ![cicd](https://github.com/nicklaw5/stack-2/workflows/cicd/badge.svg)
 
-TODO
-
-## Deployment steps
-
-TODO
+See [stack-1](https://github.com/nicklaw5/stack-1) for details.
