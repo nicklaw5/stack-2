@@ -300,6 +300,11 @@ resource "aws_route_table" "sec_priv_rt_a" {
     gateway_id = aws_nat_gateway.sec_ngw_a.id
   }
 
+  route {
+    cidr_block                = aws_vpc.restricted.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.secure_to_restricted.id
+  }
+
   tags = {
     Name       = "sec-priv-rt-a"
     Repository = var.repository
@@ -315,6 +320,11 @@ resource "aws_route_table" "sec_priv_rt_b" {
     gateway_id = aws_nat_gateway.sec_ngw_b.id
   }
 
+  route {
+    cidr_block                = aws_vpc.restricted.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.secure_to_restricted.id
+  }
+
   tags = {
     Name       = "sec-priv-rt-b"
     Repository = var.repository
@@ -328,6 +338,11 @@ resource "aws_route_table" "sec_priv_rt_c" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_nat_gateway.sec_ngw_c.id
+  }
+
+  route {
+    cidr_block                = aws_vpc.restricted.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.secure_to_restricted.id
   }
 
   tags = {
